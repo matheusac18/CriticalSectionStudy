@@ -92,8 +92,7 @@ int main(){
 
     omp_set_num_threads(N_THREADS);
     double start, end;
-    start = omp_get_wtime();
-
+    
     /* auxiliar variable to print the number of alive 
      * cells at the grid at each generation */
     int qtyAlive = 0;
@@ -150,18 +149,20 @@ int main(){
         }
     }
    
+    start = omp_get_wtime();
     qtyAlive = 0;
     #pragma omp parallel for 
     for(int k = 0; k<N_THREADS;k++){
         int end = (k*slice+slice) <= N ? (k*slice+slice) : N;
-        //printf("%d %d %d\n",k,k*slice,end);
         qtyAliveArray[k] = CountAlive(k*slice,end);
     }
 
     for(int k = 0; k<N_THREADS;k++){
         qtyAlive += qtyAliveArray[k];
     }
-    /* print the number of alive cells at the last generation done*/
+   
+    /* print the number of alive cells 
+    at the last generation done*/
     printf("Qty Alive %d",qtyAlive);
 
     end = omp_get_wtime();
