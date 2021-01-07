@@ -127,31 +127,22 @@ int main(){
         }
 
         /* get quantity of alive cells and copy newGrid to grid */
-        qtyAlive = 0;
-        #pragma omp parallel for reduction(+: qtyAlive)
+        #pragma omp parallel for
         for(int i = 0; i < N; i++) { 
             for(int j = 0; j < N;j++)
             {
                 grid[i][j] = newGrid[i][j];
-                qtyAlive += newGrid[i][j];
             }
         }
+    }
 
-        // qtyAlive = 0;
-        // #pragma omp parallel for shared(qtyAlive)
-        // for(int i = 0; i < N; i++) { 
-        //     for(int j = 0; j < N;j++)
-        //     {
-        //         grid[i][j] = newGrid[i][j];
-
-        //         #pragma omp critical
-        //         {
-        //             qtyAlive += newGrid[i][j];
-        //         }
-                
-        //     }
-        // }
-        
+    qtyAlive = 0;
+    #pragma omp parallel for reduction(+: qtyAlive)
+    for(int i = 0; i < N; i++) { 
+        for(int j = 0; j < N;j++)
+        {
+            qtyAlive += newGrid[i][j];
+        }
     }
    
     /* print the number of alive cells at the last generation done*/
